@@ -448,7 +448,7 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
   !------------------------------------------------------
 
   write(*,*) ". Now, computing first likelihood..."
-  write(*,*)".. Likelihood/segments (random) :      id        begin       end       n_data	    Like_b(sample)     MaxLogLike       Condition_MH(1)"
+  write(*,*)".. Likelihood/segments (random) : id | begin | end | n_data | Marginal_b(sample) | MaxLogLike | Log_PT(1)"
   ! a - We find indexes of each temporal segment
   do k = 1, Nc+1
       	if (k==1) then

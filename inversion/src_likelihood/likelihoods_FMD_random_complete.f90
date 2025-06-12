@@ -234,7 +234,7 @@ end subroutine Likelihood_FMD_random
 
 subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_draws, & 
 					Beta_prior, Mu_prior, Sigma_prior, cpert, New_Nc, T_bins, &
-                                        New_model_idata, New_model_iprop, & 
+                                        New_model_idata, New_model_ibins, & 
                                         Acc_Likelihood, Acc_Maxloglike, &
                                         Acc_Beta_T_posterior,  Acc_Mu_T_posterior, Acc_Sigma_T_posterior, &
                                         New_Likelihood, New_Maxloglike, &
@@ -260,7 +260,7 @@ subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_
 ! C    . T_bins  : Number of bins in the discretized time vector
 ! C
 ! C    . New_model_idata  : [Proposed model]
-! C    . New_model_iprop  : [Proposed model]
+! C    . New_model_ibins  : [Proposed model]
 ! C
 ! C    . Acc_Likelihood  : [Current model] Sum of the 3D likelihood for Beta/Mu/Sigma {float}
 ! C    . Acc_maxloglike   : [Current model] Maximum Loglikelihoodof the 3D posterior distribution {float}
@@ -300,7 +300,7 @@ subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_
     real*8, intent(in):: Beta_prior(:), Mu_prior(:), Sigma_prior(:)
     integer,intent(in):: cpert, T_bins
     integer,intent(in):: New_Nc
-    integer,intent(in):: New_model_idata(:), New_model_iprop(:)
+    integer,intent(in):: New_model_idata(:), New_model_ibins(:)
     real*8, intent(in):: Acc_Likelihood(:), Acc_Maxloglike(:)
     real*8, intent(in):: Acc_Beta_T_posterior(:,:), Acc_Mu_T_posterior(:,:), Acc_Sigma_T_posterior(:,:)
     
@@ -333,7 +333,7 @@ subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_
     New_Maxloglike = 0.0
     write(*,*) ">"
     write(*,*) ". Proposed model idata:", New_model_idata(1:New_Nc)
-    write(*,*) ". Poposed model prop :", New_model_iprop(1:New_Nc)
+    write(*,*) ". Poposed model ibins :", New_model_ibins(1:New_Nc)
     write(*,*) ">"
     write(*,*) ".. Death"
     write(*,*) ".. Id of the concerned discontinuity:", cpert
@@ -348,7 +348,7 @@ subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_
 	      		b_death = a_death + flag_ndata(1) - 1
 	      		
 	      		a_prop = 1
-	      		b_prop = New_model_iprop(j)
+	      		b_prop = New_model_ibins(j)
 
     		else if (j == New_Nc+1) then
     			flag_ndata(j) = size(mag_obs) - New_model_idata(j-1)  
@@ -356,7 +356,7 @@ subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_
     			a_death = a_death + flag_ndata(j-1)
 	    		b_death = a_death + flag_ndata(j) - 1
     		
-    			a_prop = New_model_iprop(j-1)
+    			a_prop = New_model_ibins(j-1)
       			b_prop = T_bins
 
     		else
@@ -365,8 +365,8 @@ subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_
     			a_death = a_death + flag_ndata(j-1)
 	    		b_death = a_death + flag_ndata(j) - 1
 
-	      		a_prop = New_model_iprop(j-1)
-	      		b_prop = New_model_iprop(j)
+	      		a_prop = New_model_ibins(j-1)
+	      		b_prop = New_model_ibins(j)
     		end if
     		
 		N_data_subset = flag_ndata(j)
@@ -432,7 +432,7 @@ subroutine Likelihood_FMD_random_DEATH(mag_obs, mag_bins, delta_bin, min_bin, n_
 		write(*,*) "... Likelihood of the partition", j, a_prop, b_prop, N_data_subset, &
 								New_Beta_T_posterior(a_prop, 2), New_Maxloglike(j)
 	end do
-	write(*,*)".. Likelihood :       id        begin       end       n_data	    Like_b(sample)     MaxLogLike      "
+	write(*,*)".. Likelihood /segments : id | begin | end | n_data | Marginal_b(sample) | MaxLogLike |      "
 	New_Likelihood(New_Nc+2) = Acc_Likelihood(New_Nc+3) ! We put -99999 on the last segment
 	return
 
@@ -447,7 +447,7 @@ end subroutine Likelihood_FMD_random_DEATH
 
 subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_draws, & 
 					Beta_prior, Mu_prior, Sigma_prior, cpert, New_Nc, T_bins, &
-                                        New_model_idata, New_model_iprop, & 
+                                        New_model_idata, New_model_ibins, & 
                                         Acc_Likelihood, Acc_Maxloglike, &
                                         Acc_Beta_T_posterior,  Acc_Mu_T_posterior, Acc_Sigma_T_posterior, &
                                         New_Likelihood, New_Maxloglike, &
@@ -473,7 +473,7 @@ subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_
 ! C    . T_bins  : Number of bins in the discretized time vector
 ! C
 ! C    . New_model_idata  : [Proposed model]
-! C    . New_model_iprop  : [Proposed model]
+! C    . New_model_ibins  : [Proposed model]
 ! C
 ! C    . Acc_Likelihood  : [Current model] Sum of the 3D likelihood for Beta/Mu/Sigma {float}
 ! C    . Acc_maxloglike   : [Current model] Maximum Loglikelihoodof the 3D posterior distribution {float}
@@ -513,7 +513,7 @@ subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_
     real*8, intent(in):: Beta_prior(:), Mu_prior(:), Sigma_prior(:)
     integer,intent(in):: cpert, T_bins
     integer,intent(in):: New_Nc
-    integer,intent(in):: New_model_idata(:), New_model_iprop(:)
+    integer,intent(in):: New_model_idata(:), New_model_ibins(:)
     real*8, intent(in):: Acc_Likelihood(:), Acc_Maxloglike(:)
     real*8, intent(in):: Acc_Beta_T_posterior(:,:), Acc_Mu_T_posterior(:,:), Acc_Sigma_T_posterior(:,:)
     
@@ -546,7 +546,7 @@ subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_
     New_Maxloglike = 0.0
     write(*,*) ">"
     write(*,*) ". Proposed model idata:", New_model_idata(1:New_Nc)
-    write(*,*) ". Proposed model prop :", New_model_iprop(1:New_Nc)
+    write(*,*) ". Proposed model ibins :", New_model_ibins(1:New_Nc)
     write(*,*) ">"
     write(*,*) ".. Birth"
     write(*,*) ".. Id of the concerned discontinuity:", cpert
@@ -561,7 +561,7 @@ subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_
 	      		b_birth = a_birth + flag_ndata(1) - 1
 	      		
 	      		a_prop = 1
-	      		b_prop = New_model_iprop(j)
+	      		b_prop = New_model_ibins(j)
 
     		else if (j == New_Nc+1) then
     			flag_ndata(j) = size(mag_obs) - New_model_idata(j-1)  
@@ -569,7 +569,7 @@ subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_
     			a_birth = a_birth + flag_ndata(j-1)
 	    		b_birth = a_birth + flag_ndata(j) - 1
     		
-    			a_prop = New_model_iprop(j-1)
+    			a_prop = New_model_ibins(j-1)
       			b_prop = T_bins
 
     		else
@@ -578,8 +578,8 @@ subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_
     			a_birth = a_birth + flag_ndata(j-1)
 	    		b_birth = a_birth + flag_ndata(j) - 1
 
-	      		a_prop = New_model_iprop(j-1)
-	      		b_prop = New_model_iprop(j)
+	      		a_prop = New_model_ibins(j-1)
+	      		b_prop = New_model_ibins(j)
     		end if
     		
 		N_data_subset = flag_ndata(j)
@@ -688,7 +688,7 @@ subroutine Likelihood_FMD_random_BIRTH(mag_obs, mag_bins, delta_bin, min_bin, n_
 		write(*,*) "... Likelihood of the partition", j, a_prop, b_prop, N_data_subset, &
 								New_Beta_T_posterior(a_prop, 2), New_Maxloglike(j)
 	end do
-	write(*,*)".. Likelihood :       id        begin       end       n_data	    Like_b(sample)     MaxLogLike      "
+	write(*,*)".. Likelihood /segments : id | begin | end | n_data | Marginal_b(sample) | MaxLogLike |      "
 	return
 
 end subroutine Likelihood_FMD_random_BIRTH
