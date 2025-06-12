@@ -20,7 +20,10 @@ If you use this code, please cite:
 - **b-value** from the Gutenberg-Richter law (beta= b-value/ln(10))
 - **μ (mu)** and **σ (sigma)**, which describe detectability using the error function (Ogata and Katsura, 1993)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7757129f85fd96c67424ce5ea41d625d7b95af40
 >Difference of this new version *binned*:
 *b-Bayesian_binned* is a similar version of b-Bayesian that considers the binning of an earthquake catalog (usually 0.1), this parameterization reduces considerably the computational time for earthquake catalogs of several thousands of events (the likelihood is not the product over the number of events but over the number of bins). 
 ---
