@@ -75,10 +75,10 @@ subroutine Likelihood_FMD_gridsearch(mag_bins, delta_bin, min_bin, Beta_prior, M
 		       sigma_i = Sigma_prior(is)
 
 	    		!%----Integral Bounds for q error detection function
-	    		Q_Mmin = 0.5 + 0.5 * erf( (Mmin-mu_erf) / (sqrt(2.0)*sigma_erf) )
-	    		Q_Mc = 0.5 + 0.5 * erf( ((Mmin+sigma_erf**2 * beta_erf)- mu_erf) / (sqrt(2.0)*sigma_erf) )
+	    		Q_Mmin = 0.5 + 0.5 * erf( (Mmin-mu_i) / (sqrt(2.0)*sigma_i) )
+	    		Q_Mc = 0.5 + 0.5 * erf( ((Mmin+sigma_i**2 * beta_i)- mu_i) / (sqrt(2.0)*sigma_i) )
 	    		
-	    		Phi_cste = Q_Mmin + exp( ((sigma_erf**2) * (beta_erf**2) /2) - (beta_erf*(mu_erf-Mmin)))*(1-Q_Mc)
+	    		Phi_cste = Q_Mmin + exp( ((sigma_i**2) * (beta_i**2) /2) - (beta_i*(mu_i-Mmin)))*(1-Q_Mc)
 			
 			Likelihood = 0.0
 			LogLikelihood = 0.0
@@ -91,21 +91,21 @@ subroutine Likelihood_FMD_gridsearch(mag_bins, delta_bin, min_bin, Beta_prior, M
 	        		if (mag_bins(k) .ne. 0) then
 	        			!%- terme M1
 					m1 = Mmin + delta_bin * (k-1)
-					q_m1 = 0.5 + 0.5 * erf( (m1-mu_erf)/(sqrt(2.0)*sigma_erf))
-					terme_m1 =  exp(-beta_erf*(m1-Mmin))*q_m1
+					q_m1 = 0.5 + 0.5 * erf( (m1-mu_i)/(sqrt(2.0)*sigma_i))
+					terme_m1 =  exp(-beta_i*(m1-Mmin))*q_m1
 					
 					!%- terme M2
 					m2 = Mmin + delta_bin * k
-					q_m2 = 0.5 + 0.5 * erf( (m2-mu_erf)/(sqrt(2.0)*sigma_erf))
-					terme_m2 =  exp(-beta_erf*(m2-Mmin))*q_m2
+					q_m2 = 0.5 + 0.5 * erf( (m2-mu_i)/(sqrt(2.0)*sigma_i))
+					terme_m2 =  exp(-beta_i*(m2-Mmin))*q_m2
 					
 					!%- terme 3		
-					m1_t3 = m1 + (sigma_erf**2 * beta_erf)
-					q_m1_t3 = 0.5 + 0.5 * erf( (m1_t3-mu_erf)/(sqrt(2.0)*sigma_erf))
-					m2_t3 = m2 + (sigma_erf**2 * beta_erf)
-					q_m2_t3 = 0.5 + 0.5 * erf( (m2_t3-mu_erf)/(sqrt(2.0)*sigma_erf))
+					m1_t3 = m1 + (sigma_i**2 * beta_i)
+					q_m1_t3 = 0.5 + 0.5 * erf( (m1_t3-mu_i)/(sqrt(2.0)*sigma_i))
+					m2_t3 = m2 + (sigma_i**2 * beta_i)
+					q_m2_t3 = 0.5 + 0.5 * erf( (m2_t3-mu_i)/(sqrt(2.0)*sigma_i))
 					
-					terme_3 = exp(((sigma_erf**2)*(beta_erf**2))/2 - (beta_erf*(mu_erf-Mmin))) *( q_m2_t3 - q_m1_t3)
+					terme_3 = exp(((sigma_i**2)*(beta_i**2))/2 - (beta_i*(mu_i-Mmin))) *( q_m2_t3 - q_m1_t3)
 	    	        		
 	    	        		!%---- Likelihood formula (from Marsan private comm see Laporte et al.,2025)
 	    	        		Phi_bin =  - terme_m2 + terme_m1 + terme_3
@@ -113,7 +113,7 @@ subroutine Likelihood_FMD_gridsearch(mag_bins, delta_bin, min_bin, Beta_prior, M
 			    		!%--- Loglikelihood = sum of the likelihood in each bin multiplied by the number of magnitudes in the bin
 					!%--- Consider all cases where Likelihood = 0 
 			    		if (Phi_bin .lt. 0) then
-			    			LogLikelihood = -Infinity
+			    			LogLikelihood = -99999999
 			    		else 
 			    			LogLikelihood = LogLikelihood + mag_bins(k)* dlog(Likelihood) 
 			    			
@@ -130,9 +130,8 @@ subroutine Likelihood_FMD_gridsearch(mag_bins, delta_bin, min_bin, Beta_prior, M
      	enddo
     enddo
     Maxloglike = maxval(Likelihood_FMD_3D) 
-    write(*,*) "Maximum loglikelihood (f)", Maxloglike
+    
     Likelihood_FMD_3D = exp(Likelihood_FMD_3D-Maxloglike)
-    write(*,*) "Likelihood (sum of 3D mat) (f)", sum(Likelihood_FMD_3D)
     return 
 end subroutine   Likelihood_FMD_gridsearch
 
