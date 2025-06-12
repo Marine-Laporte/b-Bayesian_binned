@@ -21,7 +21,7 @@ If you use this code, please cite:
 - **μ (mu)** and **σ (sigma)**, which describe detectability using the error function (Ogata and Katsura, 1993)
 
 
-Difference of this new version *binned*:
+>Difference of this new version *binned*:
 *b-Bayesian_binned* is a similar version of b-Bayesian that considers the binning of an earthquake catalog (usually 0.1), this parameterization reduces considerably the computational time for earthquake catalogs of several thousands of events (the likelihood is not the product over the number of events but over the number of bins). 
 ---
 
