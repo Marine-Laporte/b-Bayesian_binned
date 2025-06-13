@@ -19,9 +19,9 @@ program b_Bayesian_binned
 !-----------------------------------------
 ! # Parameters of the Markov chain
 !-----------------------------------------
-  integer, parameter :: it_max = 5000		! Total number of McMC iterations
+  integer, parameter :: it_max = 2000		! Total number of McMC iterations
   integer, parameter :: it_burnin = 1000		! Burn-in iterations
-  integer, parameter :: it_thin = 5		! Thinning for independency of accepted models
+  integer, parameter :: it_thin = 2		! Thinning for independency of accepted models
   integer, parameter :: it_std = 2000		! Number of iterations between two perturbation standard-deviation changes 
 !-----------------------------------------
 ! # Definition of priors
@@ -570,7 +570,6 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
     	end if
 	write(*,*) ".. Likelihood/segments (random)", k, a_ibins, b_ibins, flag_ndata(k),Init_Beta_T_posterior(a_ibins,2), &
 							Init_Likelihood(k),Init_Maxloglike(k),Acc_Log_Posterior_T(1)
-	write(*,*) 
 
   end do
 
@@ -883,7 +882,7 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
     		Acc_Log_Posterior_T(it) = Acc_Log_Posterior_T(it-1) ! on garde le modele precedent
     		
     		flag_unaccepted =0
-    		Nc_total(k) = Nc
+    		Nc_total(it) = Nc
     		do j = 1, T_bins	
     			Sum_accepted_T(j) = Sum_accepted_T(j) + model_T(j)
    		end do
@@ -893,6 +892,7 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
     	else 								! 2.2.B TEST CONDITION MH : ACCEPT
     									!-------------------------------------
 		Nc = New_Nc
+		Nc_total(it) = New_Nc
 		Acc_Log_Posterior_T(it) = New_Log_Posterior_T
 		model_T = New_model_T		
     		model_times = New_model_times
@@ -910,6 +910,7 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
 			if (N_thin .lt. it_thin) then 
 				N_thin = N_thin+1
 
+
 			else 
 				N_thin = 0
 				! Sum all accepted marginals p(B |T,d), p(Mu|T,d), p(Sigma|T,d) and p(T|d)
@@ -919,6 +920,7 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
 				do j = 1, T_bins	
 	    				Sum_accepted_T(j) = Sum_accepted_T(j) + New_model_T(j)
 	   			end do
+
 			end if 
     		end if
     		
@@ -930,7 +932,7 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
     			N_birth_accept = N_birth_accept + 1 
     		end if 
     		
-    		Nc_total(it) = New_Nc
+    		
     		
     		write(*,*) ".. Model accepted (old<new) : ", model_times(1:Nc)
     		
@@ -945,8 +947,8 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
     	!-------------------------------------------------------------------------
 	CALL cpu_time(t3)  !Toc. end counting time
 	progress = (t3-t1)/3600
-	t_it(k) = (t3-t4)
-	mean_t_it = sum(t_it(1:k))/k * it_max /3600
+	t_it(it) = (t3-t4)
+	mean_t_it = sum(t_it(1:it))/it * it_max /3600
 	write(*,*) "Time (hours) : ", progress ,'/', mean_t_it
 	write(*,*) "<< End of iteration >>"
   	write(*,*)
@@ -1088,11 +1090,12 @@ t_std = (time_max)/100 * Nc_stdi		! on perturbe la discontinuite de (std%) du ca
 ! 2- FIN TRANSDIMENSIONAL ITERATIONS
 !------------------------------------------------------------------------------------------------------ 
   CALL cpu_time(t2)  !Toc. end counting time
-  comp_time = nint((t2-t1)*100)
+  comp_time = nint((t2-t1)*100.0)
+  comp_time = comp_time/6000
   write(*,*) "<< End of reversible-jump >>"
   write(*,*) " -------------------------"
   write(*,*) ">> End of inversion (resume)" 
-  write(*,*) ". Total time of inversion in seconds : " , comp_time/100.0
+  write(*,*) ". Total time of inversion in minuts : " , comp_time
   write(*,*)
   
   ! Petit bilan des taux d'acceptance 
