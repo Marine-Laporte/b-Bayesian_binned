@@ -1,10 +1,10 @@
-# b_Bayesian_binned 2024
+# b_Bayesian_binned - v2 - 2025 -
 
 ## Probabilistic Estimate of b-value Temporal Variations  
 **Last update:** 11/06/2025 
 **Author:** Marine Laporte  
 **Contact:** [marine.laporte@univ-lyon1.fr](mailto:marine.laporte@univ-lyon1.fr)  
-
+**Version:** Version 2 - added magnitude binning and quicker computation time 
 ---
 
 ## 📚 Citation  
