@@ -19,16 +19,16 @@ program b_Bayesian_binned
 !-----------------------------------------
 ! # Parameters of the Markov chain
 !-----------------------------------------
-  integer, parameter :: it_max = 2000		! Total number of McMC iterations
-  integer, parameter :: it_burnin = 1000		! Burn-in iterations
-  integer, parameter :: it_thin = 2		! Thinning for independency of accepted models
+  integer, parameter :: it_max = 10000		! Total number of McMC iterations
+  integer, parameter :: it_burnin = 2000	! Burn-in iterations
+  integer, parameter :: it_thin = 4		! Thinning for independency of accepted models
   integer, parameter :: it_std = 2000		! Number of iterations between two perturbation standard-deviation changes 
 !-----------------------------------------
 ! # Definition of priors
 !-----------------------------------------
   integer, parameter :: max_layers = 50 	! Threshold on maximum layers
   
-  integer, parameter :: n_draws = 500000 			! Numbers of random draws using Monte-Carlo sampling over model priors
+  integer, parameter :: n_draws = 1000000 			! Numbers of random draws using Monte-Carlo sampling over model priors
   
   integer, parameter :: Sigma_bins = 100			! Numbers of values explored in the prior uniform distribution if gridsearch
   real*8, parameter :: Sigma_min = 0.01, Sigma_max = 0.8 	! Bounds of the Sigma uniform prior
