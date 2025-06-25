@@ -12,7 +12,7 @@ program b_Bayesian_binned
   
   integer, parameter :: N_data_max = 800000	! Number maximum of data
   integer, parameter :: T_bins = 200		! Size of the Discrete Time Vector
-  real*8, parameter  :: delta_bin = 0.1		! Binning of the catalog			
+  real*8, parameter  :: delta_bin = 0.1		! 			
   real*8, parameter  :: min_bin = 0		! Min bin < min magnitudes for integration lower bound
   real*8, parameter  :: max_bin = 9		! Max bin > max magnitudes for integration upper bound
 
@@ -22,12 +22,10 @@ program b_Bayesian_binned
   integer, parameter :: it_max = 10000		! Total number of McMC iterations
   integer, parameter :: it_burnin = 2000	! Burn-in iterations
   integer, parameter :: it_thin = 4		! Thinning for independency of accepted models
-  integer, parameter :: it_std = 2000		! Number of iterations between two perturbation standard-deviation changes 
+  integer, parameter :: it_std = 2000		! Number of iterations between two perturbation standard-deviation Nc_stdi changes 
 !-----------------------------------------
 ! # Definition of priors
-!-----------------------------------------
-  integer, parameter :: max_layers = 50 	! Threshold on maximum layers
-  
+!----------------------------------------
   integer, parameter :: n_draws = 1000000 			! Numbers of random draws using Monte-Carlo sampling over model priors
   
   integer, parameter :: Sigma_bins = 100			! Numbers of values explored in the prior uniform distribution if gridsearch
@@ -41,9 +39,10 @@ program b_Bayesian_binned
   !-----------------------------------------
   ! # Definition of initialization
   !-----------------------------------------
+  integer, parameter :: max_layers = 50 	! Threshold on maximum layers
   integer, parameter :: Nc_start_min = 3 	! Initial number of layers min
   integer, parameter :: Nc_start_max = 4 	! Initial number of layers max   
-  integer, parameter :: Nc_stdi = 1		! Initial standard deviation for layer perturbation 
+  integer, parameter :: Nc_stdi = 1		! Initial standard deviation for layer perturbation (en %)
   !            ----------------------------------
   !              # END OF THE USER-DEFINED PARAMETERS
   !            ----------------------------------

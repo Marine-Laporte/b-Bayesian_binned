@@ -144,7 +144,7 @@ subroutine Likelihood_FMD_random(mag_bins, delta_bin, min_bin, n_draws, Beta_pri
 	    		!%--- Loglikelihood = sum of the likelihood in each bin multiplied by the number of magnitudes in the bin
 			!%--- Consider all cases where Likelihood = 0 
 			if (Phi_bin .lt. 0) then
-			    	LogLikelihood = -99999999
+			    	LogLikelihood = -99999999  ! do not put -Infinity
 			else 
 			    	LogLikelihood = LogLikelihood + mag_bins(k)* dlog(Likelihood) 
 	    	        end if 
